@@ -163,11 +163,7 @@
                      <h3 id="guessCount"></h3>
                      <h2 id="guessRatio"></h2>
                   </div>
-                  <div
-                     id="cardFront"
-                     class="text-center"
-                     style="position: relative"
-                  ></div>
+                  <div id="cardFront" class="text-center"></div>
                </div>
             </div>
             <div class="col-sm"></div>
@@ -231,6 +227,24 @@
       <!-- custom scripts -->
       <script>
          const TOTALGUESS = 25;
+         const CONTINUEMSGS = {
+            afterGuesses: [
+               `If you'd like to continue, click Continue, otherwise, click exit`,
+               `Shall we continue?`,
+               `Are you afraid of no Ghost?`,
+               `Do I need to call someone about this?`,
+               `Please click continue, unless you are afraid.`,
+               `If you feel the need to leave, please click Exit.`,
+            ],
+            afterButton: [
+               `Let us continue. The deck has been shuffled. Clear your mind. When you're ready, say out loud which symbol is on the back of the card.`,
+               `Let me go ahead and shuffle this deck a few times while you think about your next guess. I'll stop shuffling when you say the next symbol`,
+               `Is is a circle, a star, a square, a plus, or waves? Do I know which one? I'll never tell. That's your job. Go ahead tell me.`,
+               `We shall continue. Clear your mind. Now tell me the symbol!`,
+               `If only Bill knew what we were doing... Now tell me the symbol.`,
+            ],
+         };
+
          // cards
          let star = {
             name: 'star',
@@ -276,10 +290,10 @@
                .text(`${db.getItem('correctGuess')} guessed correctly...`);
          }
 
-         function shuffleDeck() {
+         function shuffle(array) {
             let shuffled;
             // for some reason _.shuffle() returns an undefined list every once and a while... don't know why
-            while (!shuffled) shuffled = _.shuffle(DECK).shift();
+            while (!shuffled) shuffled = _.shuffle(array).shift();
             return shuffled;
          }
 
@@ -303,7 +317,7 @@
 
          function ZhuLi_DoTheThing(phrase) {
             annyang.pause();
-            let correct = shuffleDeck();
+            let correct = shuffle();
             let guessed = Number(db.getItem('correctGuess'));
             let count = Number(db.getItem('guessCount'));
             count++;
@@ -325,9 +339,7 @@
                }, 7000);
                return;
             } else {
-               sendCommand(
-                  ` If you'd like to continue, click Continue, otherwise, click exit`
-               );
+               sendCommand(shuffle(CONTINUEMSGS.afterGuesses));
                setTimeout(() => {
                   $('#continueBtn').show(1000);
                }, 9000);
@@ -360,9 +372,9 @@
             sendCommand(
                `On the back of this card is a circle, plus, waves, square, or star.`
             );
-            sendCommand('Clear your mind.');
+            sendCommand('Now, clear your mind.');
             sendCommand(
-               `When you're ready, say out loud which symbol is on the back of the card.`
+               `When you're ready, say out loud the symbol on the back of the card.`
             );
             // wait for response
             annyang.resume();
@@ -390,11 +402,7 @@
             // flip the card back
             flipBack();
             // send follow up response
-            sendCommand(`Let us continue. The deck has been shuffled.`);
-            sendCommand(`Clear your mind.`);
-            sendCommand(
-               `When you're ready, say out loud which symbol is on the back of the card.`
-            );
+            sendCommand(shuffle(CONTINUEMSGS.afterButton));
             // wait for response
             annyang.resume();
          }
