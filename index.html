@@ -297,16 +297,14 @@
             });
          }
 
-         function ZhuLi_DoTheThing(guesses) {
-            guesses = guesses.map(x => x.toLowerCase());
-            console.log(guesses);
+         function ZhuLi_DoTheThing(phrase) {
             annyang.pause();
             let correct = shuffleDeck();
             let guessed = Number(db.getItem('correctGuess'));
             let count = Number(db.getItem('guessCount'));
             count++;
             db.setItem('guessCount', count);
-            if (guesses.contains(correct.name)) {
+            if (phrase === correct.name) {
                guessed++;
                db.setItem('correctGuess', guessed.toString());
                sendCommand(`That is correct. `);
@@ -413,20 +411,12 @@
             updateGuesses();
             // speech initialization
             if (annyang) {
-               // annyang.debug(true);
                // Define commands. First the text we expect, and then the function it should call
                let command = {
                   ':symbol (sign)': ZhuLi_DoTheThing,
                };
                // Add our command to annyang
                annyang.addCommands(command);
-               annyang.addCallback('result', function (phrases) {
-                  console.log('I think the user said: ', phrases[0]);
-                  console.log(
-                     'But then again, it could be any of the following: ',
-                     phrases
-                  );
-               });
             }
          });
       </script>
