@@ -317,12 +317,13 @@
 
          function ZhuLi_DoTheThing(phrase) {
             annyang.pause();
+            phrase = phrase.toLowerCase();
             let correct = shuffle();
             let guessed = Number(db.getItem('correctGuess'));
             let count = Number(db.getItem('guessCount'));
             count++;
             db.setItem('guessCount', count);
-            if (phrase.toLowerCase() === correct.name) {
+            if (phrase === correct.name) {
                guessed++;
                db.setItem('correctGuess', guessed.toString());
                sendCommand(`That is correct. `);
