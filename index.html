@@ -299,6 +299,7 @@
 
          function ZhuLi_DoTheThing(guesses) {
             guesses = guess.map(x => x.toLowerCase());
+            console.log(guesses);
             annyang.pause();
             let correct = shuffleDeck();
             let guessed = Number(db.getItem('correctGuess'));
