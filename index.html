@@ -424,12 +424,20 @@
             updateGuesses();
             // speech initialization
             if (annyang) {
+               annyang.debug([(newState = true)]);
                // Define commands. First the text we expect, and then the function it should call
                let command = {
                   ':symbol (sign)': ZhuLi_DoTheThing,
                };
                // Add our command to annyang
                annyang.addCommands(command);
+               annyang.addCallback('result', function (phrases) {
+                  console.log('I think the user said: ', phrases[0]);
+                  console.log(
+                     'But then again, it could be any of the following: ',
+                     phrases
+                  );
+               });
             }
          });
       </script>
