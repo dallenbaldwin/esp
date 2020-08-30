@@ -308,7 +308,7 @@
             let count = Number(db.getItem('guessCount'));
             count++;
             db.setItem('guessCount', count);
-            if (phrase === correct.name) {
+            if (phrase.toLowerCase() === correct.name) {
                guessed++;
                db.setItem('correctGuess', guessed.toString());
                sendCommand(`That is correct. `);
