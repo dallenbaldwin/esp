@@ -33,6 +33,7 @@
             font-size: 350px;
             position: absolute;
             top: -40px;
+            z-index: -1;
          }
          .c-square {
             color: black;
@@ -40,12 +41,14 @@
             position: absolute;
             top: -210px;
             left: 36.4999px;
+            z-index: -1;
          }
          .c-circle {
             color: #f6c803;
             font-size: 250px;
             position: absolute;
             left: 47.235px;
+            z-index: -1;
          }
          .c-waves {
             color: #064ef6;
@@ -54,6 +57,7 @@
             position: absolute;
             left: 100px;
             top: 30px;
+            z-index: -1;
          }
          .c-plus {
             color: #fe0000;
@@ -61,6 +65,7 @@
             position: absolute;
             left: 6.215px;
             top: -215px;
+            z-index: -1;
          }
       </style>
    </head>
@@ -292,15 +297,15 @@
             });
          }
 
-         function ZhuLi_DoTheThing(guess) {
-            guess = guess.toLowerCase();
+         function ZhuLi_DoTheThing(guesses) {
+            guesses = guess.map(x => x.toLowerCase());
             annyang.pause();
             let correct = shuffleDeck();
             let guessed = Number(db.getItem('correctGuess'));
             let count = Number(db.getItem('guessCount'));
             count++;
             db.setItem('guessCount', count);
-            if (guess === correct.name) {
+            if (guesses.contains(correct.name)) {
                guessed++;
                db.setItem('correctGuess', guessed.toString());
                sendCommand(`That is correct. `);
@@ -331,7 +336,6 @@
             $('#gameOverModalBody').empty().append(`<p>
                You managed to guess ${correct} card${correct === 1 ? '' : 's'}.
             </p>`);
-            sendCommand(`The game is over.`);
             if (correct >= 11) {
                sendCommand(`It appears you have an affinity for the supernatural.`);
                sendCommand(`Perhaps a career in Ghost-busting is in your future.`);
@@ -343,6 +347,7 @@
          }
 
          function startGame() {
+            annyang.start({ paused: true });
             resetTheGame();
             $('#welcomeMessage').hide(1000);
             $('#startBtn').hide(1000);
@@ -362,7 +367,7 @@
 
          function resetTheGame() {
             window.speechSynthesis.cancel();
-            annyang.pause();
+            annyang.abort();
             db.setItem('correctGuess', '0');
             db.setItem('guessCount', '0');
             updateGuesses();
@@ -407,13 +412,13 @@
             updateGuesses();
             // speech initialization
             if (annyang) {
-               annyang.debug(true);
+               // annyang.debug(true);
                // Define commands. First the text we expect, and then the function it should call
-               let commands = {
+               let command = {
                   ':symbol (sign)': ZhuLi_DoTheThing,
                };
-               // Add our commands to annyang
-               annyang.addCommands(commands);
+               // Add our command to annyang
+               annyang.addCommands(command);
                annyang.addCallback('result', function (phrases) {
                   console.log('I think the user said: ', phrases[0]);
                   console.log(
@@ -421,7 +426,6 @@
                      phrases
                   );
                });
-               annyang.start({ paused: true });
             }
          });
       </script>
