@@ -4,7 +4,7 @@ ESP App for CS4690
 
 ## Attributions
 
-Library for speech recognition: https://www.talater.com/annyang/
+Library for speech recognition: [annyang](https://www.talater.com/annyang/)
 
 Bootstrap 5
 
