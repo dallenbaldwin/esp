@@ -12,7 +12,7 @@
          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
          crossorigin="anonymous"
       />
-      <link rel="stylesheet" href="./index.css" />
+      <link rel="stylesheet" href="./src/index.css" />
    </head>
    <body>
       <div class="container">
@@ -114,31 +114,31 @@
                <div id="cardFront">
                   <img
                      id="circle-card"
-                     src="./src/circle.svg"
+                     src="./assets/circle.svg"
                      alt="circle"
                      class="c-zener-card mx-auto"
                   />
                   <img
                      id="plus-card"
-                     src="./src/plus.svg"
+                     src="./assets/plus.svg"
                      alt="plus"
                      class="c-zener-card mx-auto"
                   />
                   <img
                      id="waves-card"
-                     src="./src/waves.svg"
+                     src="./assets/waves.svg"
                      alt="waves"
                      class="c-zener-card mx-auto"
                   />
                   <img
                      id="square-card"
-                     src="./src/square.svg"
+                     src="./assets/square.svg"
                      alt="square"
                      class="c-zener-card mx-auto"
                   />
                   <img
                      id="star-card"
-                     src="./src/star.svg"
+                     src="./assets/star.svg"
                      alt="star"
                      class="c-zener-card mx-auto"
                   />
@@ -192,34 +192,34 @@
          <div id="cardBtnGroup" class="row mt-1">
             <div class="col-sm text-center">
                <img
-                  src="./src/circle.svg"
+                  src="./assets/circle.svg"
                   alt="circle"
                   class="c-zener-card-small c-clickable img-fluid"
                />
                <img
-                  src="./src/plus.svg"
+                  src="./assets/plus.svg"
                   alt="plus"
                   class="c-zener-card-small c-clickable img-fluid"
                />
                <img
-                  src="./src/waves.svg"
+                  src="./assets/waves.svg"
                   alt="waves"
                   class="c-zener-card-small c-clickable img-fluid"
                />
                <img
-                  src="./src/square.svg"
+                  src="./assets/square.svg"
                   alt="square"
                   class="c-zener-card-small c-clickable img-fluid"
                />
                <img
-                  src="./src/star.svg"
+                  src="./assets/star.svg"
                   alt="star"
                   class="c-zener-card-small c-clickable img-fluid"
                />
             </div>
          </div>
       </div>
-      <audio src="./src/notification.mp3" id="notificationSound"></audio>
+      <audio src="./assets/notification.mp3" id="notificationSound"></audio>
       <!-- JavaScript and dependencies -->
       <script
          src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -237,7 +237,7 @@
          crossorigin="anonymous"
       ></script>
       <!-- custom scripts -->
-      <script src="./index.js"></script>
+      <script src="./src/index.js"></script>
       <script>
          [...document.querySelectorAll('.c-zener-card-small')].forEach(card =>
             card.addEventListener('click', ZhuLi_DoTheThing)

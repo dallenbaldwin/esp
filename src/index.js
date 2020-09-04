@@ -177,7 +177,7 @@ function startGame() {
    document.getElementById('messageSpace').style.display = 'block';
    // send init command
    newCommand(
-      `I'm going to test you for extra sensory power. The symbol on the back of this card matches one of the cards below. Clear your mind. When you're ready, select the correct card below.`
+      `I'm going to test you for extra sensory power. The symbol on the back of this card matches one of the cards below. Clear your mind. When you're ready, select the correct card.`
    );
    document.getElementById('cardBtnGroup').style.display = 'block';
 }
