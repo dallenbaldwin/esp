@@ -7,52 +7,50 @@ const TOTALGUESS = 10;
 const ESP = 5;
 const MSGS = {
    afterGuesses: [
-      `If you'd like to continue, click Continue, otherwise, click exit`,
+      `If you would like to continue, click Continue. Otherwise, click Exit`,
       `Shall we continue? I could go all day.`,
-      `Are you afraid of no Ghost?`,
-      `Do I need to call someone about this?`,
-      `Please click continue, unless you are afraid.`,
-      `If you feel the need to leave, please click Exit on your way out.`,
-      `Are you on a roll? Are you failing? I don't know. These responses are randomized`,
-      `I'm studying the effect of negative reinforcement on ESP ability.`,
-      `Is this worth the 5 dollars?`,
+      `Are you afraid of no ghost?`,
+      `Why do I feel like I need to call someone?`,
+      `Please click Continue, unless you are afraid.`,
+      `If you feel the need to leave... please click Exit on your way out.`,
+      `Are you on doing well? Are you failing? I don't know. These responses are randomized`,
+      `I'm studying the effects of negative reinforcement on ESP ability.`,
+      `Is this worth the 5 dollars the school is paying you? Oh wait... they're not paying you?`,
    ],
    afterButton: [
-      `Let us continue. The deck has been shuffled. Clear your mind. When you're ready, say out loud which symbol is on the back of the card.`,
-      `Let me go ahead and shuffle this deck a few times while you think about your next guess. I'll stop shuffling when you say the next symbol`,
-      `It could be a circle. It could be a star, It could be a square, it could be a plus, or it could be waves.`,
+      `Clear your mind... When you're ready, select the card below that matches the one on the back.`,
+      `It could be a circle, a star, a square, a plus, or waves. Select the right one below.`,
       `Do I know which one it is? I'll never tell...`,
-      `We shall continue. Clear your mind. Now tell me the symbol!`,
-      `If only Bill knew what we were doing... Now tell me the symbol.`,
-      `Man, all this small talk is making me tired. Just tell me the next symbol.`,
-      `Well, I guess you really want to see that fire station. Tell me the symbol.`,
-      `Clear your head. All right. Tell me what you think it is.`,
-      `All right. Think hard. Now... what is it.`,
-      `All right. Are you ready? What is it? Come on.`,
-      `Ok. Are you nervous? You only have a few more to go. Ok. What's this one?`,
+      `We shall continue. Now clear your mind and select the right card.`,
+      `If only Bill knew what we were doing...`,
+      `Well, I guess you really want to see that fire station. Pick a card.`,
+      `Clear your head... All right... Pick which one you think it is.`,
+      `All right... Think hard... Now... which is it?`,
+      `All right... Are you ready? What is it? Come on...`,
+      `Ok... Are you nervous? You only have a few more to go... What's this one?`,
    ],
    winCondition: [
-      `It appears you have an affinity for the supernatural.`,
-      `Perhaps a career in Ghost-busting is in your future.`,
-      `You win. Just don't cross streams when the time comes.`,
-      `This definitely wasn't an aptitude test for ghost-busting. Or was it?`,
-      `Bill would be proud...`,
+      `It appears you have an affinity for the supernatural...`,
+      `Perhaps a career in Ghost-busting is in your future...`,
+      `You have it! Remember, NEVER cross the streams.`,
+      `Now that you've proven your ESP ability... Are you ready to fight a giant Stay Puft Marshmallow Man?`,
+      `Bill would be so proud...`,
    ],
    loseCondition: [
-      `Some people just don't have it.`,
-      `I guess you're not a pretty blond girl.`,
-      `No rides in the station wagon for you I guess.`,
+      `Some people just don't have it...`,
+      `I guess you're not a pretty blond girl...`,
+      `No rides in the station wagon for you I guess...`,
       `Bill would be disappointed...`,
-      `At least they won't make a weirdly entertaining yet weirdly disappointing reboot about you and have you cameo as a brand new character in 40 years`,
+      `At least they won't make a weirdly entertaining, yet weirdly disappointing, reboot about your adventures in 40 years; only so you can cameo as a brand new character to kind of nostalgia-bait movie-goers...`,
    ],
    wrong: [
-      `Good guess, but wrong.`,
-      `Close... But definitely wrong.`,
-      `Sorry. This isn't your lucky day.`,
+      `Good guess... but wrong...`,
+      `Close... But definitely wrong...`,
+      `Sorry... This isn't your lucky day...`,
    ],
    right: [
-      `It is that symbol. Very good. That's great.`,
-      `Incredible! You can't see these can you? You're not cheating me are you?`,
+      `It is that card! Very good! That's great!`,
+      `Incredible! You can't see these cards can you? You're not cheating me are you?`,
    ],
 };
 const CARDS = ['star', 'circle', 'square', 'waves', 'plus'];
@@ -135,15 +133,19 @@ function ZhuLi_DoTheThing(event) {
    DB.setItem('guessCount', count);
    if (card === correct) {
       guessed++;
+      happyChime();
       DB.setItem('correctGuess', guessed.toString());
       newCommand(customShuffle(MSGS.right));
    } else {
+      sadBuzz();
       newCommand(`${customShuffle(MSGS.wrong)}. The correct symbol was ${correct}.`);
    }
    appendCommand(`You have guessed ${guessed} card${guessed == 1 ? '' : 's'} correctly.`);
    flipFront(correct);
    if (count >= TOTALGUESS) {
-      finishTheGame();
+      setTimeout(() => {
+         finishTheGame();
+      }, 3000);
       return;
    } else {
       appendCommand(customShuffle(MSGS.afterGuesses));
@@ -175,7 +177,7 @@ function startGame() {
    document.getElementById('messageSpace').style.display = 'block';
    // send init command
    newCommand(
-      `I'm going to test you for extra sensory power. On the back of this card is a circle, plus, waves, square, or star. Clear your mind. When you're ready, select which card is on the back from the cards below.`
+      `I'm going to test you for extra sensory power. The symbol on the back of this card matches one of the cards below. Clear your mind. When you're ready, select the correct card below.`
    );
    document.getElementById('cardBtnGroup').style.display = 'block';
 }
@@ -204,4 +206,14 @@ function continueGame() {
    flipBack();
    // send follow up response
    newCommand(customShuffle(MSGS.afterButton));
+}
+
+function happyChime() {
+   let sound = document.getElementById('notificationSound');
+   sound.volume = 1;
+   sound.play();
+}
+
+function sadBuzz() {
+   return window.navigator.vibrate(1000);
 }

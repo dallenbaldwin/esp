@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
+      <link href="./src/favicon.ico" rel="icon" type="image/x-icon" />
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>ESP</title>
@@ -150,6 +151,7 @@
                   <p>
                      ESP, or Extrasensory Perception, and whether you have it, is the goal
                      of this experiment.
+                     <span id="vibrationErrorText"></span>
                   </p>
                   <h1>Are you ready?</h1>
                </div>
@@ -217,6 +219,7 @@
             </div>
          </div>
       </div>
+      <audio src="./src/notification.mp3" id="notificationSound"></audio>
       <!-- JavaScript and dependencies -->
       <script
          src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -240,7 +243,7 @@
             card.addEventListener('click', ZhuLi_DoTheThing)
          );
          let currentGuessCount = Number(DB.getItem('guessCount'));
-         if (currentGuessCount >= TOTALGUESS) {
+         if (currentGuessCount > TOTALGUESS) {
             finishTheGame();
          } else if (currentGuessCount > 0) {
             setContinueState();
