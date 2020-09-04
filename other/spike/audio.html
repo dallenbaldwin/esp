@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>audio hello world</title>
+   </head>
+   <body>
+      <div>hello world</div>
+
+      <div>
+         <a href="http://www.bensound.com">Music</a>
+         this is for audio controls
+         <audio controls loop>
+            <source src="./bensound-slowmotion.mp3" type="audio/mpeg" />
+            <!-- fallback for non supporting browsers goes here -->
+            <p>
+               Your browser does not support HTML5 audio, but you can still
+               <a href="./bensound-slowmotion.mp3">download the music</a>.
+            </p>
+         </audio>
+      </div>
+
+      <div>
+         this is controlled via js
+         <button onclick="playSound()">play the sound</button>
+         <button onclick="pauseSound()">pause the sound</button>
+         <button onclick="restartSound()">restart the sound</button>
+
+         <audio src="./bensound-slowmotion.mp3" id="myAudio"></audio>
+      </div>
+      <script>
+         function playSound() {
+            let myAudio = document.getElementById('myAudio');
+            // myAudio.currentTime = 1; // seconds
+            // myAudio.volume = 0.5; // percent
+            myAudio.play();
+         }
+         function pauseSound() {
+            let myAudio = document.getElementById('myAudio');
+            myAudio.pause();
+         }
+         function restartSound() {
+            let myAudio = document.getElementById('myAudio');
+            myAudio.pause();
+            myAudio.currentTime = 0;
+         }
+      </script>
+   </body>
+</html>
+
+<!-- https://www.freesoundslibrary.com/bell-rings-short/ -->

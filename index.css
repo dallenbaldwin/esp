@@ -1,0 +1,30 @@
+.c-card-border {
+   border-style: solid;
+   border-radius: 2em;
+   border-width: 8px;
+   border-color: black;
+   margin: auto;
+   width: 260px;
+   height: 420px;
+}
+
+.c-ghost {
+   margin: auto;
+   font-size: 11em;
+   text-align: center !important;
+   vertical-align: middle !important;
+}
+
+.c-zener-card {
+   /* aspect ratio of playing card = 5 : 7 */
+   height: 420px;
+}
+
+.c-clickable {
+   cursor: pointer;
+}
+
+.c-zener-card-small {
+   /* aspect ratio of playing card = 5 : 7 */
+   height: 100px;
+}

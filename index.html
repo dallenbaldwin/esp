@@ -11,63 +11,7 @@
          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
          crossorigin="anonymous"
       />
-      <style>
-         .c-card {
-            border-style: solid;
-            border-radius: 2em;
-            border-width: 3px;
-            border-color: black;
-            margin: auto;
-            /* aspect ratio of playing card = 5 : 7 */
-            width: 300px;
-            height: 420px;
-         }
-         #cardBack > div {
-            margin: auto;
-            font-size: 12em;
-            text-align: center !important;
-            vertical-align: middle !important;
-         }
-         .c-star {
-            color: #25c52d;
-            font-size: 350px;
-            position: absolute;
-            top: -40px;
-            z-index: -1;
-         }
-         .c-square {
-            color: black;
-            font-size: 500px;
-            position: absolute;
-            top: -210px;
-            left: 36.4999px;
-            z-index: -1;
-         }
-         .c-circle {
-            color: #f6c803;
-            font-size: 250px;
-            position: absolute;
-            left: 47.235px;
-            z-index: -1;
-         }
-         .c-waves {
-            color: #064ef6;
-            font-size: 275px;
-            letter-spacing: -50px;
-            position: absolute;
-            left: 100px;
-            top: 30px;
-            z-index: -1;
-         }
-         .c-plus {
-            color: #fe0000;
-            font-size: 530px;
-            position: absolute;
-            left: 6.215px;
-            top: -215px;
-            z-index: -1;
-         }
-      </style>
+      <link rel="stylesheet" href="./index.css" />
    </head>
    <body>
       <div class="container">
@@ -100,15 +44,17 @@
                   <div class="modal-footer">
                      <button
                         type="button"
-                        class="btn btn-primary btn-lg c-start-the-game"
+                        class="btn btn-primary btn-lg"
                         data-dismiss="modal"
+                        onclick="startGame()"
                      >
                         Play Again
                      </button>
                      <button
                         type="button"
-                        class="btn btn-warning btn-lg c-end-the-game"
+                        class="btn btn-warning btn-lg"
                         data-dismiss="modal"
+                        onclick="resetTheGame()"
                      >
                         Exit
                      </button>
@@ -145,53 +91,94 @@
                      </button>
                      <button
                         type="button"
-                        class="btn btn-warning btn-lg c-end-the-game"
+                        class="btn btn-warning btn-lg"
                         data-dismiss="modal"
+                        onclick="resetTheGame()"
                      >
-                        Stop
+                        Quit
                      </button>
                   </div>
                </div>
             </div>
          </div>
-         <div class="row mt-5">
-            <div class="col-sm"></div>
-            <div class="col-sm">
-               <div class="c-card text-center">
-                  <div id="cardBack">
-                     <div>👻</div>
-                     <h3 id="guessCount"></h3>
-                     <h2 id="guessRatio"></h2>
+         <div class="row mt-2">
+            <div class="col-sm text-center">
+               <div id="cardBack">
+                  <div class="c-card-border">
+                     <div class="c-ghost">👻</div>
+                     <h4 id="guessCount"></h4>
+                     <h5 id="guessRatio"></h5>
                   </div>
-                  <div id="cardFront" class="text-center"></div>
+               </div>
+               <div id="cardFront">
+                  <img
+                     id="circle-card"
+                     src="./src/circle.svg"
+                     alt="circle"
+                     class="c-zener-card mx-auto"
+                  />
+                  <img
+                     id="plus-card"
+                     src="./src/plus.svg"
+                     alt="plus"
+                     class="c-zener-card mx-auto"
+                  />
+                  <img
+                     id="waves-card"
+                     src="./src/waves.svg"
+                     alt="waves"
+                     class="c-zener-card mx-auto"
+                  />
+                  <img
+                     id="square-card"
+                     src="./src/square.svg"
+                     alt="square"
+                     class="c-zener-card mx-auto"
+                  />
+                  <img
+                     id="star-card"
+                     src="./src/star.svg"
+                     alt="star"
+                     class="c-zener-card mx-auto"
+                  />
                </div>
             </div>
-            <div class="col-sm"></div>
          </div>
-         <div class="row mt-3">
+         <div class="row mt-1">
             <div class="col-sm">
                <div id="welcomeMessage">
                   <p>
                      ESP, or Extrasensory Perception, and whether you have it, is the goal
                      of this experiment.
                   </p>
-                  <p>Are you ready?</p>
+                  <h1>Are you ready?</h1>
                </div>
+               <p id="messageSpace"></p>
+            </div>
+         </div>
+         <div class="row mt-1">
+            <div class="col-sm">
                <div class="text-center">
                   <button
                      id="startBtn"
                      type="button"
-                     class="btn btn-primary btn-lg c-start-the-game"
+                     class="btn btn-primary btn-lg mx-auto"
+                     onclick="startGame()"
                   >
                      Let us Begin
                   </button>
-                  <button id="continueBtn" type="button" class="btn btn-secondary btn-lg">
+                  <button
+                     id="continueBtn"
+                     type="button"
+                     class="btn btn-secondary btn-lg mx-auto"
+                     onclick="continueGame()"
+                  >
                      Continue
                   </button>
                   <button
                      id="exitBtn"
                      type="button"
-                     class="btn btn-warning btn-lg"
+                     class="btn btn-warning btn-lg mx-auto"
                      data-toggle="modal"
                      data-target="#exitModal"
                   >
@@ -200,13 +187,37 @@
                </div>
             </div>
          </div>
+         <div id="cardBtnGroup" class="row mt-1">
+            <div class="col-sm text-center">
+               <img
+                  src="./src/circle.svg"
+                  alt="circle"
+                  class="c-zener-card-small c-clickable img-fluid"
+               />
+               <img
+                  src="./src/plus.svg"
+                  alt="plus"
+                  class="c-zener-card-small c-clickable img-fluid"
+               />
+               <img
+                  src="./src/waves.svg"
+                  alt="waves"
+                  class="c-zener-card-small c-clickable img-fluid"
+               />
+               <img
+                  src="./src/square.svg"
+                  alt="square"
+                  class="c-zener-card-small c-clickable img-fluid"
+               />
+               <img
+                  src="./src/star.svg"
+                  alt="star"
+                  class="c-zener-card-small c-clickable img-fluid"
+               />
+            </div>
+         </div>
       </div>
       <!-- JavaScript and dependencies -->
-      <script
-         src="https://code.jquery.com/jquery-3.5.1.min.js"
-         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-         crossorigin="anonymous"
-      ></script>
       <script
          src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -222,257 +233,21 @@
          integrity="sha256-ur/YlHMU96MxHEsy3fHGszZHas7NzH4RQlD4tDVvFhw="
          crossorigin="anonymous"
       ></script>
-      <!-- Library for speech recognition: https://www.talater.com/annyang/ -->
-      <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
       <!-- custom scripts -->
+      <script src="./index.js"></script>
       <script>
-         const TOTALGUESS = 25;
-         const MSGS = {
-            afterGuesses: [
-               `If you'd like to continue, click Continue, otherwise, click exit`,
-               `Shall we continue? I could go all day.`,
-               `Are you afraid of no Ghost?`,
-               `Do I need to call someone about this?`,
-               `Please click continue, unless you are afraid.`,
-               `If you feel the need to leave, please click Exit on your way out.`,
-               `Are you on a roll? Are you failing? I don't know. These responses are randomized`,
-               `I'm studying the effect of negative reinforcement on ESP ability.`,
-               `Is this worth the 5 dollars?`,
-            ],
-            afterButton: [
-               `Let us continue. The deck has been shuffled. Clear your mind. When you're ready, say out loud which symbol is on the back of the card.`,
-               `Let me go ahead and shuffle this deck a few times while you think about your next guess. I'll stop shuffling when you say the next symbol`,
-               `It could be a circle. It could be a star, It could be a square, it could be a plus, or it could be waves.`,
-               `Do I know which one it is? I'll never tell...`,
-               `We shall continue. Clear your mind. Now tell me the symbol!`,
-               `If only Bill knew what we were doing... Now tell me the symbol.`,
-               `Man, all this small talk is making me tired. Just tell me the next symbol.`,
-               `Well, I guess you really want to see that fire station. Tell me the symbol.`,
-               `Clear your head. All right. Tell me what you think it is.`,
-               `All right. Think hard. Now... what is it.`,
-               `All right. Are you ready? What is it? Come on.`,
-               `Ok. Are you nervous? You only have a few more to go. Ok. What's this one?`,
-            ],
-            winCondition: [
-               `It appears you have an affinity for the supernatural.`,
-               `Perhaps a career in Ghost-busting is in your future.`,
-               `You win. Just don't cross streams when the time comes.`,
-               `This definitely wasn't an aptitude test for ghost-busting. Or was it?`,
-               `Bill would be proud...`,
-            ],
-            loseCondition: [
-               `Some people just don't have it.`,
-               `I guess you're not a pretty blond girl.`,
-               `No rides in the station wagon for you I guess.`,
-               `Bill would be disappointed...`,
-               `At least they won't make a weirdly entertaining yet weirdly disappointing reboot about you and have you cameo as a brand new character in 40 years`,
-            ],
-            wrong: [
-               `Good guess, but wrong.`,
-               `Close... But definitely wrong.`,
-               `Sorry. This isn't your lucky day.`,
-            ],
-            right: [
-               `It is that symbol. Very good. That's great.`,
-               `Incredible! You can't see these can you? You're not cheating me are you?`,
-            ],
-         };
-
-         // cards
-         let star = {
-            name: 'star',
-            symbol: `<div class="c-star">☆</div>`,
-         };
-         let circle = {
-            name: 'circle',
-            symbol: `<div class="c-circle">◯</div>`,
-         };
-         let plus = {
-            name: 'plus',
-            symbol: `<div class="c-plus">+</div>`,
-         };
-         let square = {
-            name: 'square',
-            symbol: `<div class="c-square">□</div>`,
-         };
-         let waves = {
-            name: 'waves',
-            symbol: `<div class="c-waves">&#8967&#8967&#8967</div>`,
-         };
-
-         // init and fill deck
-         const DECK = Array(25);
-         DECK.fill(star, 0, 5);
-         DECK.fill(circle, 6, 10);
-         DECK.fill(plus, 11, 15);
-         DECK.fill(square, 16, 20);
-         DECK.fill(waves, 21, 25);
-
-         // important variables
-         const db = window.localStorage;
-         if (!db.getItem('guessCount')) db.setItem('guessCount', '0');
-         if (!db.getItem('correctGuess')) db.setItem('correctGuess', '0');
-
-         function updateGuesses() {
-            let remainingGuesses = TOTALGUESS - Number(db.getItem('guessCount'));
-            $('#guessCount')
-               .empty()
-               .text(`Of ${TOTALGUESS} guesses, ${remainingGuesses} remain.`);
-            $('#guessRatio')
-               .empty()
-               .text(`${db.getItem('correctGuess')} guessed correctly...`);
+         [...document.querySelectorAll('.c-zener-card-small')].forEach(card =>
+            card.addEventListener('click', ZhuLi_DoTheThing)
+         );
+         let currentGuessCount = Number(DB.getItem('guessCount'));
+         if (currentGuessCount >= TOTALGUESS) {
+            finishTheGame();
+         } else if (currentGuessCount > 0) {
+            setContinueState();
+         } else {
+            setBeginState();
          }
-
-         function customShuffle(array) {
-            let shuffled;
-            // for some reason _.shuffle() returns an undefined list every once and a while... don't know why
-            while (!shuffled) shuffled = _.shuffle(array).shift();
-            return shuffled;
-         }
-
-         function sendCommand(phrase) {
-            let thing = new SpeechSynthesisUtterance(phrase);
-            window.speechSynthesis.speak(thing);
-         }
-
-         function flipFront(card) {
-            $('#cardFront').empty().append(`<div>${card.symbol}</div>`);
-            $('#cardBack').hide(1000, function () {
-               $('#cardFront').show(1000);
-            });
-         }
-
-         function flipBack() {
-            $('#cardFront').hide(1000, function () {
-               $('#cardBack').show(1000);
-            });
-         }
-
-         function ZhuLi_DoTheThing(phrase) {
-            annyang.pause();
-            phrase = phrase.toLowerCase();
-            let correct = customShuffle(DECK);
-            let guessed = Number(db.getItem('correctGuess'));
-            let count = Number(db.getItem('guessCount'));
-            count++;
-            db.setItem('guessCount', count);
-            if (phrase === correct.name) {
-               guessed++;
-               db.setItem('correctGuess', guessed.toString());
-               sendCommand(customShuffle(MSGS.right));
-            } else {
-               sendCommand(
-                  `${customShuffle(MSGS.wrong)}. The correct symbol was ${correct.name}.`
-               );
-            }
-            sendCommand(
-               `You have guessed ${guessed} card${guessed == 1 ? '' : 's'} correctly`
-            );
-            flipFront(correct);
-            if (count >= TOTALGUESS) {
-               setTimeout(() => {
-                  finishTheGame();
-               }, 7000);
-               return;
-            } else {
-               sendCommand(customShuffle(MSGS.afterGuesses));
-               setTimeout(() => {
-                  $('#continueBtn').show(1000);
-               }, 3000);
-            }
-         }
-
-         function finishTheGame() {
-            let correct = Number(db.getItem('correctGuess'));
-            $('#gameOverModalBody').empty().append(`<p>
-               You managed to guess ${correct} card${correct === 1 ? '' : 's'}.
-            </p>`);
-            if (correct >= 11) {
-               sendCommand(customShuffle(MSGS.winCondition));
-            } else {
-               sendCommand(customShuffle(MSGS.loseCondition));
-            }
-            $('#gameOverBtn').click();
-         }
-
-         function startGame() {
-            annyang.start({ paused: true });
-            resetTheGame();
-            $('#welcomeMessage').hide(1000);
-            $('#startBtn').hide(1000);
-            $('#exitBtn').show(1000);
-            // send init voice
-            sendCommand(`I'm going to test you for extra sensory power.`);
-            sendCommand(
-               `On the back of this card is a circle, plus, waves, square, or star.`
-            );
-            sendCommand('Now, clear your mind.');
-            sendCommand(
-               `When you're ready, say out loud the symbol on the back of the card.`
-            );
-            // wait for response
-            annyang.resume();
-         }
-
-         function resetTheGame() {
-            window.speechSynthesis.cancel();
-            annyang.abort();
-            db.setItem('correctGuess', '0');
-            db.setItem('guessCount', '0');
-            updateGuesses();
-            flipBack();
-            $('#exitBtn').hide(1000);
-            $('#continueBtn').hide(1000);
-            $('#startBtn').show(1000);
-            $('#welcomeMessage').show(1000);
-         }
-
-         function continueGame() {
-            window.speechSynthesis.cancel();
-            $('#welcomeMessage').hide(1000);
-            $('#continueBtn').hide(1000);
-            // update guess display
-            updateGuesses();
-            // flip the card back
-            flipBack();
-            // send follow up response
-            sendCommand(customShuffle(MSGS.afterButton));
-            // wait for response
-            annyang.resume();
-         }
-
-         $(document).ready(() => {
-            if (Number(db.getItem('guessCount')) > 0) {
-               $('#startBtn').hide();
-               $('#continueBtn').show();
-               $('#exitBtn').show();
-            } else {
-               $('#startBtn').show();
-               $('#continueBtn').hide();
-               $('#exitBtn').hide();
-            }
-            $('.c-start-the-game').click(startGame);
-            $('#continueBtn').click(continueGame);
-            $('.c-end-the-game').click(resetTheGame);
-            updateGuesses();
-            // speech initialization
-            if (annyang) {
-               annyang.debug([(newState = true)]);
-               // Define commands. First the text we expect, and then the function it should call
-               let command = {
-                  "(it is) (it's) (is it) (the) (a) :symbol (sign) (thing)": ZhuLi_DoTheThing,
-               };
-               // Add our command to annyang
-               annyang.addCommands(command);
-               annyang.addCallback('result', function (phrases) {
-                  console.log('I think the user said: ', phrases[0]);
-                  console.log(
-                     'But then again, it could be any of the following: ',
-                     phrases
-                  );
-               });
-            }
-         });
+         updateGuesses();
       </script>
    </body>
 </html>
