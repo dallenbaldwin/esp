@@ -1,16 +1,12 @@
-# espBDB
+# esp
 
 ESP App for CS4690
 
 ## Attributions
 
-Library for speech recognition: [annyang](https://www.talater.com/annyang/)
-
 Bootstrap 5
 
 Popper.js
-
-jQuery
 
 lodash.js
 
@@ -22,4 +18,4 @@ If you are copying and pasting my code... I'm sorry for your loss. You probably 
 
 ## NOTE
 
-Only works on Chrome Web browser for now.
+Works on Chromium based web browsers. With other browsers, your mileage may vary.
