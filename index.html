@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-      <link href="./src/favicon.ico" rel="icon" type="image/x-icon" />
+      <link href="./assets/favicon.ico" rel="icon" type="image/x-icon" />
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>ESP</title>
@@ -12,50 +12,303 @@
          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
          crossorigin="anonymous"
       />
+      <!-- https://elrumordelaluz.github.io/csshake/ -->
+      <link
+         rel="stylesheet"
+         type="text/css"
+         href="https://csshake.surge.sh/csshake.min.css"
+      />
       <link rel="stylesheet" href="./src/index.css" />
    </head>
    <body>
-      <div class="container">
-         <!-- for some reason toggling modals doesn't work in BS5 yet?? -->
-         <button
-            type="button"
-            class="btn btn-primary d-none"
-            data-toggle="modal"
-            id="gameOverBtn"
-            data-target="#gameOverModal"
-         >
-            Launch game over
-         </button>
-         <!-- end of the game modal -->
-         <div
-            class="modal fade"
-            id="gameOverModal"
-            data-backdrop="static"
-            data-keyboard="false"
-            tabindex="-1"
-            aria-labelledby="gameOverModalLabel"
-            aria-hidden="true"
-         >
-            <div class="modal-dialog modal-dialog-centered">
-               <div class="modal-content" style="min-height: 400px">
-                  <div class="modal-header">
-                     <h5 class="modal-title" id="gameOverModalLabel">Game Over</h5>
+      <div id="app">
+         <div class="container">
+            <!-- for some reason toggling modals doesn't work in BS5 yet?? -->
+            <button
+               type="button"
+               class="btn btn-primary d-none"
+               data-toggle="modal"
+               id="gameOverBtn"
+               data-target="#gameOverModal"
+            ></button>
+            <!-- settings modal -->
+            <div
+               class="modal fade"
+               id="settingsModal"
+               data-keyboard="false"
+               tabindex="-1"
+               aria-labelledby="settingsModalLabel"
+               aria-hidden="true"
+            >
+               <div class="modal-dialog modal-dialog-centered">
+                  <div
+                     class="modal-content"
+                     style="min-height: 400px"
+                     :class="currentTheme"
+                  >
+                     <div class="modal-header">
+                        <h5 class="modal-title" id="settingsModal">Settings</h5>
+                     </div>
+                     <div class="modal-body" id="settingsModalBody">
+                        <p class="mt-2">Theme changes will reload the application</p>
+                        <div class="form-group mt-2">
+                           <label for="themeSetting">Theme</label>
+                           <select
+                              v-model="currentTheme"
+                              class="form-control"
+                              @change="setAppTheme"
+                           >
+                              <option value="light">Light</option>
+                              <option value="dark">Dark</option>
+                           </select>
+                        </div>
+                        <p class="mt-2">
+                           System Reduced Motion preferences will overwrite Vibration and
+                           Shake preferences. Vibration is not supported on all devices.
+                        </p>
+                        <div class="form-check mt-2">
+                           <label class="form-check-label">
+                              Vibrate device when incorrect
+                              <input
+                                 type="checkbox"
+                                 class="form-check-input"
+                                 v-model="vibrate"
+                                 true-value="true"
+                                 false-value="false"
+                                 @change="setCookie('vibrate', vibrate)"
+                              />
+                           </label>
+                        </div>
+                        <div class="form-check mt-2">
+                           <label class="form-check-label">
+                              Shake card when incorrect
+                              <input
+                                 type="checkbox"
+                                 class="form-check-input"
+                                 v-model="shake"
+                                 true-value="true"
+                                 false-value="false"
+                                 @change="setCookie('shake', shake)"
+                              />
+                           </label>
+                        </div>
+                        <div class="form-check mt-2">
+                           <label class="form-check-label">
+                              Pulse red when incorrect
+                              <input
+                                 type="checkbox"
+                                 class="form-check-input"
+                                 v-model="pulse"
+                                 true-value="true"
+                                 false-value="false"
+                                 @change="setCookie('pulse', pulse)"
+                              />
+                           </label>
+                        </div>
+                     </div>
+                     <div class="modal-footer">
+                        <button
+                           type="button"
+                           class="btn btn-lg"
+                           :class="currentTheme === 'dark' ? 'btn-outline-light' : 'btn-dark'"
+                           data-dismiss="modal"
+                        >
+                           Close
+                        </button>
+                     </div>
                   </div>
-                  <div class="modal-body" id="gameOverModalBody"></div>
-                  <div class="modal-footer">
+               </div>
+            </div>
+            <!-- end of the game modal -->
+            <div
+               class="modal fade"
+               id="gameOverModal"
+               data-backdrop="static"
+               data-keyboard="false"
+               tabindex="-1"
+               aria-labelledby="gameOverModalLabel"
+               aria-hidden="true"
+            >
+               <div class="modal-dialog modal-dialog-centered">
+                  <div
+                     class="modal-content"
+                     style="min-height: 400px"
+                     :class="currentTheme"
+                  >
+                     <div class="modal-header">
+                        <h5 class="modal-title">{{ gameOverHeader }}</h5>
+                     </div>
+                     <div class="modal-body">
+                        <p>You got {{ correctGuesses }} right. You needed {{ esp }}.</p>
+                        <p>{{ gameOverFeedback }}</p>
+                     </div>
+                     <div class="modal-footer">
+                        <button
+                           type="button"
+                           class="btn btn-lg"
+                           :class="currentTheme === 'dark' ? 'btn-outline-success' : 'btn-success'"
+                           data-dismiss="modal"
+                           @click="startGame"
+                        >
+                           Play Again
+                        </button>
+                        <button
+                           type="button"
+                           class="btn btn-lg"
+                           :class="currentTheme === 'dark' ? 'btn-outline-warning' : 'btn-warning'"
+                           data-dismiss="modal"
+                           @click="resetGame"
+                        >
+                           Exit
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- exit game modal -->
+            <div
+               class="modal fade"
+               id="exitModal"
+               data-backdrop="static"
+               data-keyboard="false"
+               tabindex="-1"
+               aria-labelledby="exitModalLabel"
+               aria-hidden="true"
+            >
+               <div class="modal-dialog modal-dialog-centered">
+                  <div
+                     class="modal-content"
+                     style="min-height: 400px"
+                     :class="currentTheme"
+                  >
+                     <div class="modal-header">
+                        <h5 class="modal-title" id="exitModalLabel">WAIT!</h5>
+                     </div>
+                     <div class="modal-body" id="exitModalBody">
+                        <p>Are you sure you want to exit the game?</p>
+                        <p>You may never know if you have Extra Sensory Perception!</p>
+                     </div>
+                     <div class="modal-footer">
+                        <button
+                           type="button"
+                           class="btn btn-lg"
+                           :class="currentTheme === 'dark' ? 'btn-outline-success' : 'btn-success'"
+                           data-dismiss="modal"
+                        >
+                           Continue
+                        </button>
+                        <button
+                           type="button"
+                           class="btn btn-lg"
+                           :class="currentTheme === 'dark' ? 'btn-outline-danger' : 'btn-danger'"
+                           data-dismiss="modal"
+                           @click="resetGame"
+                        >
+                           Quit
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- card space -->
+            <div class="row mt-2">
+               <div
+                  v-if="['init', 'guessing', 'round-one'].some(x => x === currentState)"
+                  class="col-sm text-center"
+               >
+                  <card-back
+                     :theme="currentTheme"
+                     :max="maxGuesses"
+                     :num="numGuesses"
+                     :correct="correctGuesses"
+                  />
+               </div>
+               <div
+                  v-if="['guessed'].some(x => x === currentState)"
+                  class="col-sm text-center"
+               >
+                  <card-front
+                     :card="currentCard"
+                     :theme="currentTheme"
+                     :class="(shaking ? 'shake shake-constant' : '') + ' ' + (pulsing ? 'c-pulse' : '')"
+                  />
+               </div>
+            </div>
+            <!-- message space -->
+            <div class="row mt-1 text-center">
+               <div class="col-sm">
+                  <div v-cloak v-if="['init'].some(x => x === currentState)">
+                     <p>
+                        ESP, or Extrasensory Perception, and whether you have it, is the
+                        goal of this experiment.
+                     </p>
+                     <h1>Are you ready?</h1>
+                  </div>
+                  <p v-if="['round-one'].some(x => x === currentState)">
+                     I'm going to test you for extra sensory power. The symbol on the back
+                     of this card matches one of the cards below. Clear your mind. When
+                     you're ready, select the correct card.
+                  </p>
+                  <p v-if="['guessing', 'guessed'].some(x => x === currentState)">
+                     {{ currentFeedback }}
+                  </p>
+               </div>
+            </div>
+            <!-- card button space: HAVE TO V-IF THESE TO GET THE THEME TO PASS CORRECTLY-->
+            <div
+               class="row mt-1"
+               v-if="['guessing', 'round-one'].some(x => x === currentState)"
+            >
+               <div class="col-sm">
+                  <div class="c-flexy">
+                     <card-button
+                        v-for="c of cards"
+                        :card="c"
+                        :theme="currentTheme"
+                        @guessed="ZhuLi_DoTheThing"
+                     />
+                  </div>
+               </div>
+            </div>
+            <!-- interface button space -->
+            <div class="row mt-1">
+               <div class="col-sm">
+                  <div class="text-center">
                      <button
+                        v-show="['init'].some(x => x === currentState)"
                         type="button"
-                        class="btn btn-primary btn-lg"
-                        data-dismiss="modal"
-                        onclick="startGame()"
+                        class="btn btn-lg mx-auto"
+                        :class="currentTheme === 'dark' ? 'btn-outline-success' : 'btn-success'"
+                        @click="startGame"
                      >
-                        Play Again
+                        Let us Begin
                      </button>
                      <button
+                        v-show="numGuesses < maxGuesses"
                         type="button"
-                        class="btn btn-warning btn-lg"
-                        data-dismiss="modal"
-                        onclick="resetTheGame()"
+                        class="btn btn-lg mx-auto"
+                        :class="currentTheme === 'dark' ? 'btn-outline-light' : 'btn-dark'"
+                        data-toggle="modal"
+                        data-target="#settingsModal"
+                     >
+                        Settings
+                     </button>
+                     <button
+                        v-show="['guessed'].some(x => x === currentState) && numGuesses < maxGuesses"
+                        type="button"
+                        class="btn btn-lg mx-auto"
+                        :class="currentTheme === 'dark' ? 'btn-outline-light' : 'btn-dark'"
+                        @click="continueGame"
+                     >
+                        Continue
+                     </button>
+                     <button
+                        v-show="['round-one', 'guessing', 'guessed'].some(x => x === currentState) && numGuesses < maxGuesses"
+                        type="button"
+                        class="btn btn-lg mx-auto"
+                        :class="currentTheme === 'dark' ? 'btn-outline-warning' : 'btn-warning'"
+                        data-toggle="modal"
+                        data-target="#exitModal"
                      >
                         Exit
                      </button>
@@ -63,164 +316,13 @@
                </div>
             </div>
          </div>
-         <!-- exit game modal -->
-         <div
-            class="modal fade"
-            id="exitModal"
-            data-backdrop="static"
-            data-keyboard="false"
-            tabindex="-1"
-            aria-labelledby="exitModalLabel"
-            aria-hidden="true"
-         >
-            <div class="modal-dialog modal-dialog-centered">
-               <div class="modal-content" style="min-height: 400px">
-                  <div class="modal-header">
-                     <h5 class="modal-title" id="exitModalLabel">WAIT!</h5>
-                  </div>
-                  <div class="modal-body" id="exitModalBody">
-                     <p>Are you sure you want to exit the game?</p>
-                     <p>You may never know you have Extra Sensory Perception!</p>
-                  </div>
-                  <div class="modal-footer">
-                     <button
-                        type="button"
-                        class="btn btn-primary btn-lg"
-                        data-dismiss="modal"
-                     >
-                        Continue
-                     </button>
-                     <button
-                        type="button"
-                        class="btn btn-warning btn-lg"
-                        data-dismiss="modal"
-                        onclick="resetTheGame()"
-                     >
-                        Quit
-                     </button>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="row mt-2">
-            <div class="col-sm text-center">
-               <div id="cardBack">
-                  <div class="c-card-border">
-                     <div class="c-ghost">👻</div>
-                     <h4 id="guessCount"></h4>
-                     <h5 id="guessRatio"></h5>
-                  </div>
-               </div>
-               <div id="cardFront">
-                  <img
-                     id="circle-card"
-                     src="./assets/circle.svg"
-                     alt="circle"
-                     class="c-zener-card mx-auto"
-                  />
-                  <img
-                     id="plus-card"
-                     src="./assets/plus.svg"
-                     alt="plus"
-                     class="c-zener-card mx-auto"
-                  />
-                  <img
-                     id="waves-card"
-                     src="./assets/waves.svg"
-                     alt="waves"
-                     class="c-zener-card mx-auto"
-                  />
-                  <img
-                     id="square-card"
-                     src="./assets/square.svg"
-                     alt="square"
-                     class="c-zener-card mx-auto"
-                  />
-                  <img
-                     id="star-card"
-                     src="./assets/star.svg"
-                     alt="star"
-                     class="c-zener-card mx-auto"
-                  />
-               </div>
-            </div>
-         </div>
-         <div class="row mt-1">
-            <div class="col-sm">
-               <div id="welcomeMessage">
-                  <p>
-                     ESP, or Extrasensory Perception, and whether you have it, is the goal
-                     of this experiment.
-                     <span id="vibrationErrorText"></span>
-                  </p>
-                  <h1>Are you ready?</h1>
-               </div>
-               <p id="messageSpace"></p>
-            </div>
-         </div>
-         <div class="row mt-1">
-            <div class="col-sm">
-               <div class="text-center">
-                  <button
-                     id="startBtn"
-                     type="button"
-                     class="btn btn-primary btn-lg mx-auto"
-                     onclick="startGame()"
-                  >
-                     Let us Begin
-                  </button>
-                  <button
-                     id="continueBtn"
-                     type="button"
-                     class="btn btn-secondary btn-lg mx-auto"
-                     onclick="continueGame()"
-                  >
-                     Continue
-                  </button>
-                  <button
-                     id="exitBtn"
-                     type="button"
-                     class="btn btn-warning btn-lg mx-auto"
-                     data-toggle="modal"
-                     data-target="#exitModal"
-                  >
-                     Exit
-                  </button>
-               </div>
-            </div>
-         </div>
-         <div id="cardBtnGroup" class="row mt-1">
-            <div class="col-sm text-center">
-               <img
-                  src="./assets/circle.svg"
-                  alt="circle"
-                  class="c-zener-card-small c-clickable img-fluid"
-               />
-               <img
-                  src="./assets/plus.svg"
-                  alt="plus"
-                  class="c-zener-card-small c-clickable img-fluid"
-               />
-               <img
-                  src="./assets/waves.svg"
-                  alt="waves"
-                  class="c-zener-card-small c-clickable img-fluid"
-               />
-               <img
-                  src="./assets/square.svg"
-                  alt="square"
-                  class="c-zener-card-small c-clickable img-fluid"
-               />
-               <img
-                  src="./assets/star.svg"
-                  alt="star"
-                  class="c-zener-card-small c-clickable img-fluid"
-               />
-            </div>
-         </div>
       </div>
       <audio src="./assets/notification.mp3" id="notificationSound"></audio>
       <!-- JavaScript and dependencies -->
+      <!-- development version, includes helpful console warnings -->
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <!-- production version, optimized for size and speed -->
+      <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
       <script
          src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -238,19 +340,5 @@
       ></script>
       <!-- custom scripts -->
       <script src="./src/index.js"></script>
-      <script>
-         [...document.querySelectorAll('.c-zener-card-small')].forEach(card =>
-            card.addEventListener('click', ZhuLi_DoTheThing)
-         );
-         let currentGuessCount = Number(DB.getItem('guessCount'));
-         if (currentGuessCount > TOTALGUESS) {
-            finishTheGame();
-         } else if (currentGuessCount > 0) {
-            setContinueState();
-         } else {
-            setBeginState();
-         }
-         updateGuesses();
-      </script>
    </body>
 </html>
