@@ -226,7 +226,7 @@ const v = new Vue({
          setTimeout(() => (this.pulsing = !this.pulsing), 1000);
       },
       quakerShaker() {
-         if (this.shouldMove) {
+         if (!this.shouldReduce()) {
             this.shaking = !this.shaking;
             setTimeout(() => (this.shaking = !this.shaking), 1000);
          }
@@ -244,25 +244,25 @@ const v = new Vue({
          b.classList.remove('light');
          b.classList.add(this.currentTheme);
          this.setCookie('theme', this.currentTheme);
-         setTimeout(() => location.reload(), 500); // need this to update the images...
+         location.reload(); // need this to update the images...
       },
-      checkMovePref() {
+      shouldReduce() {
          return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       },
-      checkThemePref() {
+      getSystemTheme() {
          if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
          else return 'light';
       },
    },
    mounted() {
       this.currentState = this.getCookie('gameState') || 'init';
-      this.currentTheme = this.getCookie('theme') || this.checkThemePref();
+      this.currentTheme = this.getCookie('theme') || this.getSystemTheme();
       this.numGuesses = Number(this.getCookie('numGuesses')) || 0;
       this.correctGuesses = Number(this.getCookie('correctGuesses')) || 0;
-      this.shouldMove = this.checkMovePref() || true;
+      this.shouldMove = !this.shouldReduce() || true;
       this.pulse = this.getCookie('pulse') || 'true';
-      this.vibrate = this.getCookie('vibrate') || `${this.checkMovePref()}`;
-      this.shake = this.getCookie('shake') || `${this.checkMovePref()}`;
+      this.vibrate = this.getCookie('vibrate') || `${!this.shouldReduce()}`;
+      this.shake = this.getCookie('shake') || `${!this.shouldReduce()}`;
       this.currentCard = this.getCookie('currentCard') || '';
       this.initAppTheme();
       if (this.currentState === 'game-over') this.endGame();
