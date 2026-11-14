@@ -2,8 +2,6 @@
 
 ESP App for CS4690
 
-Copyright ©️ 2020 Dallen Baldwin. All rights reserved.
-
 ## Attributions
 
 - Bootstrap 5
