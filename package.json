@@ -1,6 +1,6 @@
 {
   "name": "esp",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "esp app for CS4690",
   "homepage": "https://github.com/dallenbaldwin/esp#readme",
   "bugs": {
@@ -15,7 +15,7 @@
   "type": "module",
   "main": "main.js",
   "scripts": {
-    "demo": "vp build && vp preview --open",
+    "demo": "vp build --mode development && vp preview --mode development --open",
     "prepare": "vp config"
   },
   "dependencies": {
