@@ -1,8 +1,9 @@
 import vue from '@vitejs/plugin-vue2';
 import { defineConfig } from 'vite-plus';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [vue()],
+  base: mode === 'production' ? '/esp/' : undefined,
   resolve: {
     alias: {
       vue: 'vue/dist/vue.esm.js',
@@ -24,4 +25,4 @@ export default defineConfig({
     rules: { 'vite-plus/prefer-vite-plus-imports': 'error' },
     options: { typeAware: true, typeCheck: true },
   },
-});
+}));
