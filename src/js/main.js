@@ -1,5 +1,7 @@
 import _ from 'lodash';
 import Vue from 'vue';
+const base =
+  (import.meta.env.MODE ?? 'development') === 'development' ? '' : '/esp';
 
 const CardFront = {
   template: `
@@ -14,7 +16,7 @@ const CardFront = {
   props: ['card', 'theme'],
   data: function () {
     return {
-      imgSrc: `/assets/${this.theme}/${this.card}.svg`,
+      imgSrc: `${base}/assets/${this.theme}/${this.card}.svg`,
     };
   },
 };
@@ -34,7 +36,7 @@ const CardBack = {
   props: ['theme', 'max', 'num', 'correct'],
   data: function () {
     return {
-      imgSrc: `/assets/${this.theme}/ghost.png`,
+      imgSrc: `${base}/assets/${this.theme}/ghost.png`,
     };
   },
 };
@@ -55,7 +57,7 @@ const CardButton = {
   props: ['card', 'theme'],
   data: function () {
     return {
-      imgSrc: `./assets/${this.theme}/${this.card}.svg`,
+      imgSrc: `${base}/assets/${this.theme}/${this.card}.svg`,
     };
   },
   methods: {

@@ -3,7 +3,7 @@ import { defineConfig } from 'vite-plus';
 
 export default defineConfig(({ mode }) => ({
   plugins: [vue()],
-  base: mode === 'production' ? '/esp/' : undefined,
+  base: mode === 'development' ? undefined : '/esp/',
   resolve: {
     alias: {
       vue: 'vue/dist/vue.esm.js',
